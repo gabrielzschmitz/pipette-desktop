@@ -36,6 +36,21 @@
               libgcrypt
               gpgme
               libsecret
+              glib
+              gtk3
+              webkitgtk_4_1
+              libsoup_3
+              libGL
+              mesa
+              vulkan-loader
+              libxkbcommon
+              wayland
+              libx11
+              libxcursor
+              libxrandr
+              libxi
+              libxext
+              libxfixes
             ];
 
             extraInstallCommands = ''
