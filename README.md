@@ -164,6 +164,55 @@ sudo udevadm control --reload-rules && sudo udevadm trigger
 
 `scripts/99-vial.rules` is in this repository; the AppImage also carries a copy at `usr/lib/Pipette/udev/99-vial.rules`. Rules installed for 0.4 keep working.
 
+#### NixOS
+
+Pipette can be installed on NixOS from the AppImage using the provided flake.
+
+##### Installation with Nix Flakes
+
+Add Pipette to your system:
+
+```nix
+# In your flake.nix
+inputs.pipette.url = "github:darakuneko/pipette-desktop";
+
+# In your NixOS configuration
+environment.systemPackages = [ inputs.pipette.packages.${pkgs.system}.default ];
+```
+
+Or install directly from the command line:
+
+```bash
+nix profile install github:darakuneko/pipette-desktop
+```
+
+##### Development
+
+For development, use `nix-shell` or the flake's dev shell:
+
+```bash
+nix-shell
+# or
+nix develop
+```
+
+Then install dependencies and run the development server as usual:
+
+```bash
+pnpm install
+pnpm dev
+```
+
+##### udev Rules on NixOS
+
+Vial-compatible keyboards require udev rules to grant access. On NixOS, add the package to your udev packages:
+
+```nix
+services.udev.packages = [ inputs.pipette.packages.${pkgs.system}.default ];
+```
+
+This will install the necessary rules from `99-vial.rules`. After rebuilding your system (`nixos-rebuild switch`), unplug and replug your keyboard.
+
 #### Monitor App on Wayland (GNOME Shell extension)
 
 The typing-view Monitor App toggle tags each minute of recording with the active application name. X11 exposes the focused window directly, but on Wayland the desktop sandboxes window focus, so Pipette falls back to a GNOME Shell extension.
