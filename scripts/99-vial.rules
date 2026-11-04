@@ -8,4 +8,4 @@
 #   sudo cp 99-vial.rules /etc/udev/rules.d/
 #   sudo udevadm control --reload-rules && sudo udevadm trigger
 
-KERNEL=="hidraw*", SUBSYSTEM=="hidraw", TAG+="uaccess"
+KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666", GROUP="input", TAG+="uaccess"
