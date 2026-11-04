@@ -31,6 +31,13 @@
           ${pname} = pkgs.appimageTools.wrapType2 {
             inherit pname version src;
 
+            extraPkgs = pkgs: with pkgs; [
+              libgpg-error
+              libgcrypt
+              gpgme
+              libsecret
+            ];
+
             extraInstallCommands = ''
               mkdir -p $out/lib/udev/rules.d
               cp ${udevRules}/lib/udev/rules.d/99-vial.rules $out/lib/udev/rules.d/
@@ -88,9 +95,13 @@ EOF
             clippy
             rustfmt
             typescript-language-server
+            corepack
           ];
 
           shellHook = ''
+            export COREPACK_ENABLE_STRICT=0
+            export PNPM_IGNORE_PACKAGE_MANAGER_CHECK=1
+            corepack enable >/dev/null 2>&1 || true
             echo "Pipette development environment"
             echo "Run 'pnpm install' and 'pnpm dev' to start development"
             echo ""
@@ -99,7 +110,7 @@ EOF
             echo "  sudo udevadm control --reload-rules && sudo udevadm trigger"
             echo ""
             echo "On NixOS, add to configuration.nix:"
-            echo "  services.udev.packages = with pkgs; [ pipette-desktop ];"
+            echo "  services.udev.packages = with pkgs; [ pipette ];"
           '';
         };
       }
